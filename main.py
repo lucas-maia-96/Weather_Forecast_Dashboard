@@ -1,6 +1,7 @@
 import streamlit as st
 import plotly.express as px
 from backend import get_data
+from datetime import datetime
 
 
 # Add title, text input, slider, selectbox and subheader
@@ -33,11 +34,14 @@ if place:
         if option == "Sky":
             images = {"Clear": "images/clear.png", "Clouds": "images/cloud.png",
                       "Rain": "images/rain.png", "Snow": "images/snow.png"}
+            date = [dicio["dt_txt"] for dicio in filtered_data]
+            dia = [datetime.strptime(day, '%Y-%m-%d %H:%M:%S') for day in date]
+            dia_port = [d.strftime("%a, %B %d - %H:%M") for d in dia]
             sky_conditions = [dicio["weather"][0]["main"]
                               for dicio in filtered_data]
             images_paths = [images[condition] for condition in sky_conditions]
 
-            st.image(images_paths, width=115)
+            st.image(images_paths, width=115, caption=dia_port, )
 
     except KeyError:
         st.write(
